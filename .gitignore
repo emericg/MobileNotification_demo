@@ -1,0 +1,11 @@
+CMakeLists.txt.user
+Makefile
+build/
+bin/
+
+stash/
+.DS_Store
+
+# Android resources auto-copied from thirdparty/MobileNotification/android/
+assets/android/src/io/emeric/mobilenotification/NotificationClient.java
+
