@@ -39,6 +39,17 @@ Window {
 
     // MOBILE NOTIFICATION /////////////////////////////////////////////////////
 
+    // Channel IDs we register for the demo app
+    readonly property int channelDefault: 1
+    readonly property int channelHigh: 2
+
+    // Monotonic counter handing out a fresh requestId for each new notification,
+    // so posted notifications coexist instead of replacing each other.
+    property int notifCounter: 0
+
+    // ID of the last notification we posted (used by "update" and "cancel last").
+    property int lastRequestId: 0
+
     MobileNotification_dispatcher {
 
         // React to MobileNotification singleton signals through a dispatcher
@@ -54,7 +65,8 @@ Window {
             MobileNotification.registerChannel(appWindow.channelDefault, "Default",
                                                MobileNotification.ImportanceDefault, 0xFF2196F3)
             MobileNotification.registerChannel(appWindow.channelHigh, "High priority",
-                                               MobileNotification.ImportanceHigh, 0xFFF44336)
+                                               MobileNotification.ImportanceHigh, 0xFFF44336,
+                                               "", "", true)
         }
     }
 
@@ -241,15 +253,21 @@ Window {
                         onClicked: {
                             appWindow.lastRequestId = ++appWindow.notifCounter
                             MobileNotification.notify("Hello", "Notification #" + appWindow.lastRequestId,
-                                                      appWindow.channelDefault, appWindow.lastRequestId)
+                                                         appWindow.channelDefault, appWindow.lastRequestId,
+                                                         "default/" + appWindow.lastRequestId,
+                                                         { color: 0xFF2196F3,
+                                                           bigText: "This is a longer, expandable body demonstrating BigTextStyle. " +
+                                                                 "Pull the notification down to see the full text of notification #" +
+                                                                 appWindow.lastRequestId + "." })
                         }
                     }
                     Button {
                         text: "notify (high)"
                         onClicked: {
                             appWindow.lastRequestId = ++appWindow.notifCounter
-                            MobileNotification.notify("Heads up!", "High-priority #" + appWindow.lastRequestId,
-                                                      appWindow.channelHigh, appWindow.lastRequestId)
+                            MobileNotification.notify("Heads up!", "High-priority #" + appWindow.lastRequestId, appWindow.channelHigh,
+                                                         appWindow.lastRequestId, "high/" + appWindow.lastRequestId,
+                                                         { color: 0xFFF44336 })
                         }
                     }
                 }

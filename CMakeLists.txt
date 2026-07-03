@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 
+set(QT_NO_PRIVATE_MODULE_WARNING ON)
+
 ################################################################################
 
 message(STATUS ">>> BUILDING ${PROJECT_NAME} v${PROJECT_VERSION} >>>")
@@ -46,6 +48,8 @@ qt_add_qml_module(${PROJECT_NAME}
     SOURCES
         src/PermissionManager.cpp
         src/PermissionManager.h
+        src/PermissionManager_AndroidHelper.cpp
+        src/PermissionManager_AndroidHelper.h
 )
 
 # Qt
@@ -66,8 +70,12 @@ add_subdirectory(thirdparty/MobileNotification/)
 target_link_libraries(${PROJECT_NAME} PRIVATE MobileNotification MobileNotification_plugin)
 
 # Qt official hacks...
-set(QML_IMPORT_PATH "${CMAKE_BINARY_DIR}/thirdparty/MobileUI" CACHE STRING "QML Modules import paths" FORCE)
-set(QML_IMPORT_PATH "${CMAKE_BINARY_DIR}/thirdparty/MobileNotification" CACHE STRING "QML Modules import paths" FORCE)
+set(QML_IMPORT_PATH
+    "${CMAKE_BINARY_DIR}/thirdparty/MobileUI"
+    "${CMAKE_BINARY_DIR}/thirdparty/MobileNotification"
+    CACHE STRING "QML Modules import paths" FORCE)
+
+# Qt official hacks...
 set(QT_QML_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 ################################################################################
@@ -84,6 +92,15 @@ if(ANDROID)
 
     # Support 16 KB page sizes / pre NDK28
     target_link_options(${PROJECT_NAME} PRIVATE "-Wl,-z,max-page-size=16384")
+
+    # QtAndroidPrivate is needed by the PermissionManager
+    if(Qt6Core_VERSION VERSION_GREATER_EQUAL 6.10.0)
+        find_package(Qt6 REQUIRED COMPONENTS CorePrivate)
+        target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::CorePrivate)
+    else()
+        find_package(Qt6 REQUIRED COMPONENTS Core)
+        target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::CorePrivate)
+    endif()
 endif()
 
 ## iOS
