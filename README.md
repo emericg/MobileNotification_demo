@@ -25,6 +25,6 @@ $ cmake --build build/
 
 ## License
 
-The MobileNotification_demo project, just like the MobileNotification module, is licensed under the [MIT license](LICENSE).
+The MobileNotification_demo project, just like the MobileNotification module, is licensed under the [MIT license](LICENSE.md).
 
-> Emeric Grange <emeric.grange@gmail.com>
+> Copyright (c) Emeric Grange <emeric.grange@gmail.com>

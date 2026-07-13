@@ -31,7 +31,8 @@ Window {
     property int screenPaddingBottom: MobileUI.safeAreaBottom
 
     MobileUI_dispatcher {
-        statusbarColor: "#4361ee"
+        statusbarColor: "transparent"
+        statusbarContentColor: "#4361ee"
 
         navbarColor: "transparent"
         navbarContentColor: "#eee"
@@ -47,8 +48,12 @@ Window {
     // so posted notifications coexist instead of replacing each other.
     property int notifCounter: 0
 
-    // ID of the last notification we posted (used by "update" and "cancel last").
+    // ID of the last notification we posted (used by "update" and "cancel last")
     property int lastRequestId: 0
+
+    // State for the progress-bar demo
+    property int progressRequestId: 0
+    property int progressValue: 0
 
     MobileNotification_dispatcher {
 
@@ -125,7 +130,7 @@ Window {
 
             visible: true
             height: MobileUI.statusbarHeight
-            color: MobileUI.statusbarColor
+            color: MobileUI.statusbarContentColor
         }
         Rectangle {
             id: navbarUnderlay
